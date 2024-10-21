@@ -23,4 +23,4 @@ Requirements :
 Simply run `qemu-system-i386 fda build/Main.floppy.img`
 
 ### VirtualBox , VMWare or others
-Go to your VM settings and set the floppy image to your builded image
+Go to your VM settings and set the floppy image to your built image
