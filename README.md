@@ -1,4 +1,7 @@
 # EwOS
+
+![Frame 1](https://github.com/user-attachments/assets/d74a8092-fbf6-4de8-b6fa-ac48d8421c4d)
+
 ## Build
 ### Linux :
 Requirements :
