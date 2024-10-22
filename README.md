@@ -1,7 +1,7 @@
+![EwOS Banner Image](https://github.com/user-attachments/assets/c6d65ddc-cbc1-4a93-9483-3db905cc264d)
+![Disclaimer Text Image](https://github.com/user-attachments/assets/48e36d74-cab9-4e88-930a-6b0d7e1e0804)
+
 # EwOS
-
-![Frame 1](https://github.com/user-attachments/assets/d74a8092-fbf6-4de8-b6fa-ac48d8421c4d)
-
 ## Build
 ### Linux :
 Requirements :
