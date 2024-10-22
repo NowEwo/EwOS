@@ -12,7 +12,7 @@ All the linux requirements and :
 All the linux requirements but :
 - `Windows Subsystem for Linux` to have compatibility with all these tools
 
-Run `sh build.sh` in your terminal and wait
+Run `sh ./ewos.sh build` in your terminal and wait
 
 ## Run
 Requirements :
@@ -20,7 +20,7 @@ Requirements :
 - `Main.floppy.img` image that you have to build
 
 ### Qemu
-Simply run `qemu-system-i386 fda build/Main.floppy.img`
+Simply run `qemu-system-i386 fda build/Main.floppy.img` or `sh ./ewos.sh run`
 
 ### VirtualBox , VMWare or others
 Go to your VM settings and set the floppy image to your built image
