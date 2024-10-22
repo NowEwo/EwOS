@@ -1,4 +1,4 @@
-; Definitions of the file system header for EwOS floppy disk
+; Definitions of the file system header for the EwOS disk
 ; EwoFluffy 2024
 
 OEMLabel db 'MSWIN4.1' ; OEM Label                    => 8 bytes and it's MSWIN4.1 because it's the only one that worked for me
