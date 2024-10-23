@@ -60,5 +60,5 @@ if [ "$1" == "clean" ]; then
 fi
 
 if [ "$1" == "" ]; then
-    echo -e "\e[1m\e[34mUsage: ./ewos.sh [build|run|test|buildtools <tool>]\e[0m"
+    echo -e "\e[1m\e[34mUsage: ./ewos.sh [build|run|test|clean|img <action>|buildtools <tool>]\e[0m"
 fi
