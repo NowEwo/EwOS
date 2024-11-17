@@ -56,7 +56,7 @@ main: ; Main function
 
 
 ; Set the "variables"
-Greetings: db 'Welcome to the boot sector :3', LINE_END, 0 ; Don't use double quotes for strings in assembly and 0 is for signaling the end of the string
+Greetings: db 'Booting the Kernel...', LINE_END, 0 ; Don't use double quotes for strings in assembly and 0 is for signaling the end of the string
 
 times 510-($-$$) db 0 ; Fill the rest of the sector with 0 ($-$$ = current position in the file) | Directive
 dw 0xAA55 ; Boot signature | Directive

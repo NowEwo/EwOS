@@ -1,26 +1,37 @@
 #!/bin/bash
 
+Message(){
+    if [ "$1" == "t" ]; then
+        echo -e "\e[1m\e[34m$2\e[0m"
+    fi
+    if [ "$1" == "s" ]; then
+        echo -e "\e[1m\e[32m$2\e[0m"
+    fi
+    if [ "$1" == "i" ]; then
+        echo -e "\e[1m\e[34m$2\e[0m"
+    fi
+}
+
+CommandVerbose()
+{
+    echo -e "| \e[2;3m$1\e[0m"
+}
+
 if [ "$1" == "build" ]; then
-    echo -e "\e[1m\e[34mBuilding bootloader\e[0m"
-    echo -e "| \e[2;3mnasm src/bootloader/Main.asm -f bin -o build/bootloader.bin\e[0m"
+    Message t "Building bootloader"
+    CommandVerbose "nasm src/bootloader/Main.asm -f bin -o build/bootloader.bin"
     nasm src/bootloader/Main.asm -f bin -o build/bootloader.bin
-    echo -e "\e[1m\e[32mBootloader built\e[0m"
-    echo -e "\e[1m\e[34mBuilding kernel\e[0m"
-    echo -e "| \e[2;3mnasm src/kernel/Main.asm -f bin -o build/kernel.bin\e[0m"
+    Message t "Building kernel"
+    CommandVerbose "nasm src/kernel/Main.asm -f bin -o build/kernel.bin"
     nasm src/kernel/Main.asm -f bin -o build/kernel.bin
-    echo -e "\e[1m\e[32mKernel built\e[0m"
-    echo -e "\e[1m\e[34mSetup the virtual disk image\e[0m"
-    echo -e '| \e[2;3mdd if="/dev/zero" of="build/Main.floppy.img" bs=512 count=2880\e[0m'
-    dd if="/dev/zero" of="build/Main.floppy.img" bs=512 count=2880
-    echo -e '| \e[2;3mmkfs.fat -F 12 -n "EwOS" build/Main.floppy.img\e[0m'
-    mkfs.fat -F 12 -n "EWOSBOOTLDR" build/Main.floppy.img
-    echo -e '| \e[2;3mdd if="build/bootloader.bin" of="build/Main.floppy.img" conv=notrunc\e[0m'
-    dd if="build/bootloader.bin" of="build/Main.floppy.img" conv=notrunc
-    echo -e '| \e[2;3mmcopy -i build/Main.floppy.img build/kernel.bin "::kernel.bin"\e[0m'
-    mcopy -i build/Main.floppy.img build/kernel.bin "::kernel.bin"
-    echo -e "\e[1m\e[32mBuilding complete\e[0m"
-    echo ""
-    echo -e "\e[1m\e[34mType 'sh ./ewos.sh run' to test it on Qemu\e[0m"
+    CommandVerbose "if=/dev/zero of=build/Main.floppy.img bs=512 count=2880"
+    dd if=/dev/zero of=build/Main.floppy.img bs=512 count=2880
+    CommandVerbose "dd if=build/bootloader.bin of=build/Main.floppy.img bs=512 count=1 conv=notrunc"
+    dd if=build/bootloader.bin of=build/Main.floppy.img bs=512 count=1 conv=notrunc
+    CommandVerbose "dd if=kernel.bin of=build/Main.floppy.img bs=512 seek=1 conv=notrunc"
+    dd if=build/kernel.bin of=build/Main.floppy.img bs=512 seek=1 conv=notrunc
+    Message s "Building complete"
+
 fi
 if [ "$1" == "buildtools" ]; then
     if [ "$2" == "fat" ]; then
@@ -34,31 +45,31 @@ if [ "$1" == "buildtools" ]; then
 fi
 if [ "$1" == "img" ]; then
     if [ "$2" == "add" ]; then
-        echo -e "\e[1m\e[34mAdding files to the image\e[0m"
-        echo -e '| \e[2;3mmcopy -i build/Main.floppy.img "$3"" "::$4"\e[0m'
+        message t "Adding files to the image"
+        CommandVerbose 'mcopy -i build/Main.floppy.img "$3"" "::$4"'
         mcopy -i build/Main.floppy.img "$3" "::$4"
-        echo -e "\e[1m\e[32mFiles added to the image\e[0m"
+        message s "Files added to the image"
     fi
 fi
 if [ "$1" == "run" ]; then
-    echo -e "\e[1m\e[34mRunning the OS\e[0m"
-    echo -e "| \e[2;3mqemu-system-i386 -fda build/Main.floppy.img\e[0m"
-    qemu-system-i386 -fda build/Main.floppy.img
+    Message t "Running the OS"
+    CommandVerbose "qemu-system-i386 -drive file=build/Main.floppy.img,format=raw"
+    qemu-system-i386 -drive file=build/Main.floppy.img,format=raw
 fi
 if [ "$1" == "test" ]; then
-    echo -e "\e[1m\e[34mTesting the OS\e[0m"
-    echo -e "| \e[2;3m./ewos.sh build/*\e[0m"
+    message t "Testing the OS"
+    CommandVerbose "./ewos.sh build"
     ./ewos.sh build
-    echo -e "| \e[2;3m./ewos.sh run/*\e[0m"
+    CommandVerbose "./ewos.sh run"
     ./ewos.sh run
 fi
 if [ "$1" == "clean" ]; then
-    echo -e "\e[1m\e[34mCleaning up the build directory\e[0m"
-    echo -e "| \e[2;3mrm -rf build/*\e[0m"
+    Message t "Cleaning up the build directory"
+    CommandVerbose "rm -rf build/*"
     rm -rf build/*
-    echo -e "\e[1m\e[32mBuild directory cleaned up\e[0m"
+    Message s "Build directory cleaned up"
 fi
 
 if [ "$1" == "" ]; then
-    echo -e "\e[1m\e[34mUsage: ./ewos.sh [build|run|test|clean|img <action>|buildtools <tool>]\e[0m"
+    Message t "Usage: ./ewos.sh [build|run|test|clean|img <action>|buildtools <tool>]"
 fi
