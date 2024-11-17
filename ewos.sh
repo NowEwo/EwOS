@@ -35,12 +35,12 @@ if [ "$1" == "build" ]; then
 fi
 if [ "$1" == "buildtools" ]; then
     if [ "$2" == "fat" ]; then
-        echo -e "\e[1m\e[34mBuilding FAT12 Tools\e[0m"
-        echo -e "| \e[2;3mmkdir -p build/tools\e[0m"
+        Message t "Building FAT12 Tools"
+        CommandVerbose "mkdir -p build/tools"
         mkdir -p build/tools
-        echo -e "| \e[2;3mgcc src/tools/fat/fat.c -o build/tools/fat\e[0m"
+        CommandVerbose "gcc src/tools/fat/fat.c -o build/tools/fat"
         gcc src/tools/fat/fat.c -o build/tools/fat
-        echo -e "\e[1m\e[32mFAT12 Tools built\e[0m"
+        Message s "FAT12 Tools built"
     fi
 fi
 if [ "$1" == "img" ]; then
