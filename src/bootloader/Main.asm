@@ -1,62 +1,46 @@
-; Basic ASM based boot sector for EwOS
-; EwoFluffy - 2024
+org 0x7C00
+bits 16
 
-; Directive : To the assembler | Intruction : converted to machine code
-
-org 0x7C00 ; Tell the assembler that the code is gonna be loaded at this adress (7C00) | Directive
-bits 16 ; Tell the assembler that the code is gonna be 16 bits (Start in 16 bits mode to backward compatibility with 8086) | Directive
-
-; Set a macro for the end of the line => Simpler to use it in the program
 %define LINE_END 0x0D, 0x0A
 
-; Add important things to make the bootloader usable with FAT12 => FAT12 Header
-jmp short start ; Jump to the start label
-nop ; No operation
-%include 'src/bootloader/FileSystemDefine.asm' ; Include the file system define file
+jmp start
+nop
 
-; mov ax, var => Copy the offset adress of var to ax
-; mov ax, [var] => Copy the value of var to ax
-; mov a, b is equivalent to a = b in C => move b to a
-; mov => Move data from one place to another
+%include "src/bootloader/FileSystemDefine.asm"
+%include "src/bootloader/DiskIO.asm"
+%include "src/bootloader/Prints.asm"
+%include "src/bootloader/KernelLoader.asm"
+
+sector_low db 1 ; Define sector number for `disk_read`
 
 start:
-    jmp main ; Jump to the main function to prevent the CPU from executing the rest of the code
+    ; Bootloader initialization code
+    xor ax, ax
+    mov ds, ax
+    mov es, ax
+    mov ss, ax
+    mov sp, 0x7C00
 
-; .function => label for a function (like a sub-function)
+    ; Clear the screen
+    mov ah, 0x00
+    mov al, 0x03
+    int 0x10
 
-; function to print a string on the screen
-%include 'src/bootloader/Prints.asm'
+    ; Print a loading message
+    mov si, Greetings
+    call prints
 
-main: ; Main function
-    ; Setup the segments
-    mov ax, 0 ; Set ax to 0 to make all other values to 0
-    mov ds, ax ; Set the data segment to 0 => Useful to access the memory
-    mov es, ax ; Same thing for the extra segment
+    ; Call kernel loader
+    call load_kernel
 
-    ; Setup the stack
-    mov ss, ax ; Set the stack segment to ax (0)
-    mov sp, 0x7C00 ; Set the stack pointer to 0x7C00 , the stacks grows downward so we set it to the start of the boot sector to prevent overwriting the code
+    ; Jump to kernel
+    jmp 0x0000:0x1000
 
-    ; Clear the screen using the video services interrupt
-    mov ah, 0x00 ; Set ah to 0x00 => Set video mode
-    mov al, 0x03 ; Set al to 0x03 => Set video mode to 80x25 text mode , this will clear the screen
-    int 0x10 ; Call the video services interrupt from BIOS
+.halt:
+    hlt
+    jmp .halt
 
-    ; Show the greetings using our function
-    mov si, Greetings ; Set si to the adress of the greetings string
-    call prints ; Call the prints function to print the greetings
+Greetings db 'Loading EwOS Kernel...', LINE_END, 0
 
-    ; End of the boot sector code
-    hlt ; Halt the CPU
-
-.halt: ; Halt function
-    jmp .halt ; Jump to the halt function
-
-; db : Define byte directive
-
-
-; Set the "variables"
-Greetings: db 'Booting the Kernel...', LINE_END, 0 ; Don't use double quotes for strings in assembly and 0 is for signaling the end of the string
-
-times 510-($-$$) db 0 ; Fill the rest of the sector with 0 ($-$$ = current position in the file) | Directive
-dw 0xAA55 ; Boot signature | Directive
+times 510-($-$$) db 0
+dw 0xAA55

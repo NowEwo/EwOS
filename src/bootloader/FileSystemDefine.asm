@@ -21,3 +21,10 @@ Signature db 0x29 ; Signature                         => 0x29 used to signal tha
 VolumeID db 0x01, 0x00, 0x00, 0x01 ; Volume ID        => Serial number of the volume so 0x01000001
 VolumeLabel db 'EWOFLUFFY  OS', 0 ; Volume label      => 11 bytes
 FileSystem db 'FAT12   ', 0 ; File system             => 8 bytes
+
+BPB_BytsPerSec    equ 11  ; Offset of Bytes per Sector in the BPB
+BPB_SecPerClus    equ 13  ; Offset of Sectors per Cluster
+BPB_RsvdSecCnt    equ 14  ; Offset of Reserved Sectors
+BPB_NumFATs       equ 16  ; Offset of Number of FATs
+BPB_RootClus      equ 44  ; Offset of Root Directory Cluster (FAT32 specific)
+BPB_FATSz32       equ 36  ; Offset of FAT size in sectors (FAT32 specific)
