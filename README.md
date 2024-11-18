@@ -6,7 +6,7 @@
 ### Linux :
 Requirements :
 - `nasm` for assemble the bootloader and kernel
-- `dd` , `mkfs` and `mtools` for setup the virtual disk
+- `dd` , ~~`mkfs`~~ and ~~`mtools`~~ for setup the virtual disk
 - `sh` for executing the programs
 ### MacOS :
 All the linux requirements and :
