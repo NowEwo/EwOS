@@ -23,7 +23,7 @@ Requirements :
 - `Main.floppy.img` image that you have to build
 
 ### Qemu
-Simply run `qemu-system-i386 fda build/Main.floppy.img` or `sh ./ewos.sh run`
+Simply run `qemu-system-i386 -drive file=build/Main.floppy.img,format=raw` or `sh ./ewos.sh run`
 
 ### VirtualBox , VMWare or others
 Go to your VM settings and set the floppy image to your built image
