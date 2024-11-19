@@ -1,5 +1,5 @@
-// Program that can read sectors from disk
-// EwoFluffy 2024
+; Program that can read sectors from disk
+; EwoFluffy 2024
 
 ReadDisk:
     pusha ; Save registers
